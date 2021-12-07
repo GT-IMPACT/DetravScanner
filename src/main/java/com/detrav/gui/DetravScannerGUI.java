@@ -86,23 +86,33 @@ public class DetravScannerGUI extends GuiScreen {
 						case 2:
 							if (i % 16 == 1 && j % 16 == 1) {
 								final short fluidSize = map.packet.map[i][j].get((byte) 2);
-								GL11.glPushMatrix();
-								GL11.glScaled(.5d, .5d, .5d);
-								Color colorf = Color.WHITE;
-								fontRendererObj.drawString(fluidSize + "", (int) ((i + aX + 1) * 10d / 5d), (int) ((j + aY + 19 - fontRendererObj.FONT_HEIGHT) * 10d / 5d), colorf.hashCode(), true);
-								GL11.glPopMatrix();
+								short idFluid = map.packet.map[i][j].get((byte) 1);
+								final String name = map.packet.metaMap.get(idFluid);
+								if (map.selected.equals("All") || map.selected.equals(name)) {
+									GL11.glPushMatrix();
+									GL11.glScaled(.5d, .5d, .5d);
+									Color colorf = Color.WHITE;
+									fontRendererObj.drawString(fluidSize + "", (int) ((i + aX + 1) * 10d / 5d), (int) ((j + aY + 19 - fontRendererObj.FONT_HEIGHT) * 10d / 5d), colorf.hashCode(), true);
+									GL11.glPopMatrix();
+								}
 							}
 							break;
 						case 4: // impact VR ores
 						case 5:
+						case 6:
+						case 7:
+						case 8:
 							if (i % 16 == 0 && j % 16 == 0) {
 								short veinSize = map.packet.map[i][j].get((byte) 2);
-								
-								GL11.glPushMatrix();
-								GL11.glScaled(.5d, .5d, .5d);
-								Color color = Color.WHITE;
-								fontRendererObj.drawString(veinSize + "k", (int) ((i + aX + 2) * 10d / 5d), (int) ((j + aY + 20 - fontRendererObj.FONT_HEIGHT) * 10d / 5d), color.hashCode(), true);
-								GL11.glPopMatrix();
+								short idVein = map.packet.map[i][j].get((byte) 1);
+								final String name = map.packet.metaMap.get(idVein);
+								if (map.selected.equals("All") || map.selected.equals(name)) {
+									GL11.glPushMatrix();
+									GL11.glScaled(.5d, .5d, .5d);
+									Color color = Color.WHITE;
+									fontRendererObj.drawString(veinSize + "k", (int) ((i + aX + 2) * 10d / 5d), (int) ((j + aY + 20 - fontRendererObj.FONT_HEIGHT) * 10d / 5d), color.hashCode(), true);
+									GL11.glPopMatrix();
+								}
 							}
 							break;
 					}

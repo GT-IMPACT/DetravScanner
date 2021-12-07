@@ -1,5 +1,6 @@
 package com.detrav.items.behaviours;
 
+import com.detrav.cfg.Config;
 import com.detrav.items.DetravMetaGeneratedTool01;
 import com.detrav.net.DetravNetwork;
 import com.detrav.net.ProspectingPacket;
@@ -40,23 +41,14 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 			if (aPlayer.isSneaking()) {
 				data++;
 				if (data == 0 || data == 1) data = 2;
-				if (data > 5) data = 2;
-				switch (data) {
-					case 2:
-						aPlayer.addChatMessage(new ChatComponentText("Set Mode: Oil, Any Block"));
-						break;
-					case 3:
-						aPlayer.addChatMessage(new ChatComponentText("Set Mode: Pollution, Any Block"));
-						break;
-					case 4:
-						aPlayer.addChatMessage(new ChatComponentText("Set Mode: Impact Ores (Layer 1)"));
-						break;
-					case 5:
-						aPlayer.addChatMessage(new ChatComponentText("Set Mode: Impact Ores (Layer 2)"));
-						break;
-					default:
-						aPlayer.addChatMessage(new ChatComponentText("Set Mode: ERROR"));
-						break;
+				if (data > Config.modesProspect) data = 2;
+
+				if (data > 3) {
+					aPlayer.addChatMessage(new ChatComponentText("Set Mode: Impact Ores (Layer " + (data - 4) + ")"));
+				} else if (data == 2) {
+					aPlayer.addChatMessage(new ChatComponentText("Set Mode: Oil, Any Block"));
+				} else if (data == 3) {
+					aPlayer.addChatMessage(new ChatComponentText("Set Mode: Pollution, Any Block"));
 				}
 				DetravMetaGeneratedTool01.INSTANCE.setToolGTDetravData(aStack, data);
 				return super.onItemRightClick(aItem, aStack, aWorld, aPlayer);
@@ -127,6 +119,9 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 									break;
 								case 4:
 								case 5:
+								case 6:
+								case 7:
+								case 8:
 									Chunk chunkCurr = aWorld.getChunkFromBlockCoords(c.xPosition * 16 + x, c.zPosition * 16 + z);
 									ChunkCoordIntPair chunkPosition = chunkCurr.getChunkCoordIntPair();
 									int xRegCurrent = (chunkPosition.chunkXPos >> 5) % 512;

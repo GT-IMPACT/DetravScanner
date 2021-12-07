@@ -83,7 +83,7 @@ public class ProspectingPacket extends DetravPacket {
 				// Pollution
 				name = StatCollector.translateToLocal("gui.detrav.scanner.pollution");
 				rgba = new short[]{125, 123, 118, 0};
-			} else if (packet.ptype == 4 || packet.ptype == 5) {
+			} else if (packet.ptype > 3) {
 				OreGenerator ore = OreGenerator.NONE;
 				for (OreGenerator o : OreGenerator.values()) {
 					if (meta == o.id) {
@@ -93,7 +93,7 @@ public class ProspectingPacket extends DetravPacket {
 				}
 				rgba = ore.colorVein;
 				if (rgba == null) {
-					DetravScannerMod.proxy.sendPlayerExeption("Unknown Impact Ore ID = " + meta + " Please add to FluidColors.java!");
+					DetravScannerMod.proxy.sendPlayerExeption("Unknown Impact Ore ID = " + meta + " Please add Color!");
 					rgba = new short[]{125, 123, 118, 0};
 				}
 				name = Objects.firstNonNull(ore.mName, StatCollector.translateToLocal("gui.detrav.scanner.unknown_ore"));

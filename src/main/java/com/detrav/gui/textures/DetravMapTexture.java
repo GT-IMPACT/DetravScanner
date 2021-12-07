@@ -20,7 +20,7 @@ public class DetravMapTexture extends AbstractTexture {
 	public int width = -1;
 	public int height = -1;
 	public boolean invert = false;
-	private String selected = "All";
+	public String selected = "All";
 	
 	public DetravMapTexture(ProspectingPacket aPacket) {
 		packet = aPacket;
@@ -60,7 +60,7 @@ public class DetravMapTexture extends AbstractTexture {
 						final short meta = packet.map[i][j].get((byte) 1);
 						image.setRGB(i, j, ((meta & 0xFF) << 16) + ((meta & 0xFF) << 8) + ((meta & 0xFF)) | 0XFF000000);
 						
-					} else if (packet.ptype == 4 || packet.ptype == 5) {
+					} else if (packet.ptype > 3) {
 						
 						final short veinId = packet.map[i][j].get((byte) 1);
 						final short veinSize = packet.map[i][j].get((byte) 2);
