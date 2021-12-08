@@ -7,7 +7,9 @@ import com.google.common.base.Objects;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import com.impact.mods.gregtech.enums.OreGenerator;
+import com.impact.common.oregeneration.OreGenerator;
+import com.impact.common.oregeneration.OreVein;
+import com.impact.core.Impact_API;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.util.GT_LanguageManager;
@@ -84,19 +86,13 @@ public class ProspectingPacket extends DetravPacket {
 				name = StatCollector.translateToLocal("gui.detrav.scanner.pollution");
 				rgba = new short[]{125, 123, 118, 0};
 			} else if (packet.ptype > 3) {
-				OreGenerator ore = OreGenerator.NONE;
-				for (OreGenerator o : OreGenerator.values()) {
-					if (meta == o.id) {
-						ore = o;
-						break;
-					}
-				}
+				OreVein ore = Impact_API.registerVeins.get((int) meta);
 				rgba = ore.colorVein;
 				if (rgba == null) {
-					DetravScannerMod.proxy.sendPlayerExeption("Unknown Impact Ore ID = " + meta + " Please add Color!");
+					DetravScannerMod.proxy.sendPlayerExeption("Unknown Impact Ore VeinID = " + meta + " Please add Color!");
 					rgba = new short[]{125, 123, 118, 0};
 				}
-				name = Objects.firstNonNull(ore.mName, StatCollector.translateToLocal("gui.detrav.scanner.unknown_ore"));
+				name = Objects.firstNonNull(ore.nameVein, StatCollector.translateToLocal("gui.detrav.scanner.unknown_ore"));
 			} else {
 				return;
 			}

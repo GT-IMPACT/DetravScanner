@@ -4,9 +4,11 @@ import com.detrav.cfg.Config;
 import com.detrav.items.DetravMetaGeneratedTool01;
 import com.detrav.net.DetravNetwork;
 import com.detrav.net.ProspectingPacket;
+import com.impact.common.oregeneration.OreGenerator;
 import com.impact.common.oregeneration.OreVein;
-import com.impact.common.oregeneration.OresRegion;
-import com.impact.mods.gregtech.enums.OreGenerator;
+import com.impact.common.oregeneration.generator.OreVeinGenerator;
+import com.impact.common.oregeneration.generator.OresRegionGenerator;
+import com.impact.core.Impact_API;
 import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.common.GT_UndergroundOil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -126,23 +128,16 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 									ChunkCoordIntPair chunkPosition = chunkCurr.getChunkCoordIntPair();
 									int xRegCurrent = (chunkPosition.chunkXPos >> 5) % 512;
 									int zRegCurrent = (chunkPosition.chunkZPos >> 5) % 512;
-									OresRegion currentRegion = new OresRegion(xRegCurrent, zRegCurrent);
+									OresRegionGenerator currentRegion = new OresRegionGenerator(xRegCurrent, zRegCurrent, aWorld.provider.dimensionId);
 									if (!regionsOres.contains(currentRegion)) {
 										currentRegion.createVeins();
 										regionsOres.add(currentRegion);
 									}
 									int layer = data - 4;
-									int sizeVein = OreGenerator.sizeChunk(chunkCurr, layer) / 1000;
-									OreVein oreVein = OreGenerator.getVein(chunkCurr, layer);
+									OreVeinGenerator oreVein = OreGenerator.getVein(chunkCurr, layer);
 									if (oreVein != null) {
-										int idVein = OreGenerator.values().length - 1;
-										for (int i = 0; i < OreGenerator.values().length; i++) {
-											if (OreGenerator.values()[i].name().equals(oreVein.oreGenerator)) {
-												idVein = i;
-												break;
-											}
-										}
-										packet.addBlock(c.xPosition * 16 + x, 1, c.zPosition * 16 + z, (short) idVein);
+										int sizeVein = OreGenerator.sizeChunk(chunkCurr, layer) / 1000;
+										packet.addBlock(c.xPosition * 16 + x, 1, c.zPosition * 16 + z, (short) oreVein.oreVeinID);
 										packet.addBlock(c.xPosition * 16 + x, 2, c.zPosition * 16 + z, (short) sizeVein);
 									}
 									break;
