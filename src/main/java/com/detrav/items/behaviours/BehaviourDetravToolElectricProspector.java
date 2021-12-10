@@ -4,6 +4,7 @@ import com.detrav.cfg.Config;
 import com.detrav.items.DetravMetaGeneratedTool01;
 import com.detrav.net.DetravNetwork;
 import com.detrav.net.ProspectingPacket;
+import com.google.common.base.Objects;
 import com.impact.common.oregeneration.OreGenerator;
 import com.impact.common.oregeneration.OreVein;
 import com.impact.common.oregeneration.generator.OreVeinGenerator;
@@ -129,9 +130,10 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 									int xRegCurrent = (chunkPosition.chunkXPos >> 5) % 512;
 									int zRegCurrent = (chunkPosition.chunkZPos >> 5) % 512;
 									OresRegionGenerator currentRegion = new OresRegionGenerator(xRegCurrent, zRegCurrent, aWorld.provider.dimensionId);
-									if (!regionsOres.contains(currentRegion)) {
+									int idHash = Objects.hashCode(currentRegion.xRegion, currentRegion.zRegion);
+									if (!regionsOres.containsKey(idHash)) {
 										currentRegion.createVeins();
-										regionsOres.add(currentRegion);
+										regionsOres.put(idHash, currentRegion);
 									}
 									int layer = data - 4;
 									OreVeinGenerator oreVein = OreGenerator.getVein(chunkCurr, layer);
