@@ -129,8 +129,9 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 									ChunkCoordIntPair chunkPosition = chunkCurr.getChunkCoordIntPair();
 									int xRegCurrent = (chunkPosition.chunkXPos >> 5) % 512;
 									int zRegCurrent = (chunkPosition.chunkZPos >> 5) % 512;
-									OresRegionGenerator currentRegion = new OresRegionGenerator(xRegCurrent, zRegCurrent, aWorld.provider.dimensionId);
-									int idHash = Objects.hashCode(currentRegion.xRegion, currentRegion.zRegion);
+									int dimID = aWorld.provider.dimensionId;
+									OresRegionGenerator currentRegion = new OresRegionGenerator(xRegCurrent, zRegCurrent, dimID);
+									int idHash = Objects.hashCode(currentRegion.xRegion, currentRegion.zRegion, dimID);
 									if (!regionsOres.containsKey(idHash)) {
 										currentRegion.createVeins();
 										regionsOres.put(idHash, currentRegion);
