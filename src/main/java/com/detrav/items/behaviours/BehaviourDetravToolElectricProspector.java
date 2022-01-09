@@ -6,9 +6,11 @@ import com.detrav.net.DetravNetwork;
 import com.detrav.net.ProspectingPacket;
 import com.google.common.base.Objects;
 import com.impact.common.oregeneration.OreGenerator;
+import com.impact.common.oregeneration.OreVein;
 import com.impact.common.oregeneration.generator.OreVeinGenerator;
 import com.impact.common.oregeneration.generator.OresRegionGenerator;
 import gregtech.api.items.GT_MetaBase_Item;
+import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_UndergroundOil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -138,34 +140,50 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 	}
 	
 	public boolean onItemUse(GT_MetaBase_Item aItem, ItemStack aStack, EntityPlayer aPlayer, World aWorld, int aX, int aY, int aZ, int aSide, float hitX, float hitY, float hitZ) {
-		long data = DetravMetaGeneratedTool01.INSTANCE.getToolGTDetravData(aStack);
-		if (data < 2) {
-			if (aWorld.getBlock(aX, aY, aZ) == Blocks.bedrock) {
+		long dataSrc = DetravMetaGeneratedTool01.INSTANCE.getToolGTDetravData(aStack);
+		int data = (int) dataSrc;
+		switch (data) {
+			case 2:
+				if (aWorld.getBlock(aX, aY, aZ) == Blocks.bedrock) {
+					if (!aWorld.isRemote) {
+						FluidStack fStack = GT_UndergroundOil.undergroundOil(aWorld.getChunkFromBlockCoords(aX, aZ), -1);
+						addChatMassageByValue(aPlayer, fStack.amount, fStack.getLocalizedName());
+						if (!aPlayer.capabilities.isCreativeMode) {
+							((DetravMetaGeneratedTool01) aItem).doDamage(aStack, this.mCosts);
+						}
+					}
+					return true;
+				} else {
+					if (!aWorld.isRemote) {
+						prospectSingleChunk(aItem, aStack, aPlayer, aWorld, aX, aY, aZ);
+					}
+					return true;
+				}
+			case 3:
 				if (!aWorld.isRemote) {
 					FluidStack fStack = GT_UndergroundOil.undergroundOil(aWorld.getChunkFromBlockCoords(aX, aZ), -1);
 					addChatMassageByValue(aPlayer, fStack.amount, fStack.getLocalizedName());
-					if (!aPlayer.capabilities.isCreativeMode)
+					if (!aPlayer.capabilities.isCreativeMode) {
 						((DetravMetaGeneratedTool01) aItem).doDamage(aStack, this.mCosts);
+					}
+					return true;
 				}
-				return true;
-			} else {
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
 				if (!aWorld.isRemote) {
-					prospectSingleChunk(aItem, aStack, aPlayer, aWorld, aX, aY, aZ);
+					Chunk ch = aWorld.getChunkFromBlockCoords(aX, aZ);
+					int tier = data - 4;
+					OreVeinGenerator oreVein = OreGenerator.getVein(ch, tier);
+					OreVein ore = OreGenerator.getOreVein(ch, tier);
+					if (oreVein != null) {
+						int sizeVein = OreGenerator.sizeChunk(ch, tier);
+						aPlayer.addChatMessage(new ChatComponentText(foundTexts[6] + ": " + ore.nameVein + ", size: " + GT_Utility.formatNumbers(sizeVein)));
+					}
+					return true;
 				}
-				return true;
-			}
-		}
-		if (data < 3)
-			if (!aWorld.isRemote) {
-				FluidStack fStack = GT_UndergroundOil.undergroundOil(aWorld.getChunkFromBlockCoords(aX, aZ), -1);
-				addChatMassageByValue(aPlayer, fStack.amount, fStack.getLocalizedName());
-				if (!aPlayer.capabilities.isCreativeMode)
-					((DetravMetaGeneratedTool01) aItem).doDamage(aStack, this.mCosts);
-				return true;
-			}
-		if (!aWorld.isRemote) {
-			int polution = getPolution(aWorld, aX, aZ);
-			addChatMassageByValue(aPlayer, polution, "Pollution");
 		}
 		return true;
 	}
