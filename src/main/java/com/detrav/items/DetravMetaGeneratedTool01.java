@@ -124,25 +124,25 @@ public class DetravMetaGeneratedTool01 extends GT_MetaGenerated_Tool {
     @SuppressWarnings("unchecked")
     public void getDetravSubItems(Item item, CreativeTabs detravCreativeTab, List list) {
         ItemStack dStack;
-        //Electric Scanners 
-        dStack = getToolWithStats(100, 1, Materials.BT6, Materials.TungstenSteel, new long[]{25000000L, GT_Values.V[6-2], 6L-2, -1L});
-        setCharge(dStack,25000000L);
+        //Electric Scanners
+        long charge = 6_400_000;
+        dStack = getToolWithStats(100, 1, Materials.BT6, Materials.TungstenSteel, new long[]{charge, GT_Values.V[6-2], 6L-2, -1L});
+        setCharge(dStack,charge);
         list.add(dStack);
-        dStack = getToolWithStats(102, 1, Materials.HastelloyC276, Materials.TungstenSteel, new long[]{250000000L, GT_Values.V[7-2], 7L-2, -1L});
-        setCharge(dStack,250000000L);
+    
+        charge = 25_600_000;
+        dStack = getToolWithStats(102, 1, Materials.HastelloyC276, Materials.TungstenSteel, new long[]{charge, GT_Values.V[7-2], 7L-2, -1L});
+        setCharge(dStack,charge);
         list.add(dStack);
-        //Electric Scanners 
-        dStack = getToolWithStats(100, 1, Materials.BT6, Materials.TungstenSteel, new long[]{25000000L, GT_Values.V[6-2], 6L-2, -1L});
-        setCharge(dStack,25000000L);
+    
+        charge = 102_400_000;
+        dStack = getToolWithStats(104, 1, Materials.HastelloyN, Materials.TungstenSteel, new long[]{charge, GT_Values.V[8-2], 8L-2, -1L});
+        setCharge(dStack, charge);
         list.add(dStack);
-        dStack = getToolWithStats(102, 1, Materials.HastelloyC276, Materials.TungstenSteel, new long[]{250000000L, GT_Values.V[7-2], 7L-2, -1L});
-        setCharge(dStack,250000000L);
-        list.add(dStack);
-        dStack = getToolWithStats(104, 1, Materials.HastelloyN, Materials.TungstenSteel, new long[]{1000000000L, GT_Values.V[8-2], 8L-2, -1L});
-        setCharge(dStack, 1000000000L);
-        list.add(dStack);
-        dStack = getToolWithStats(106, 1, Materials.Lafium, Materials.TungstenSteel, new long[]{10000000000L, GT_Values.V[9-2], 9L-2, -1L});
-        setCharge(dStack, 10000000000L);
+    
+        charge = 409_600_000;
+        dStack = getToolWithStats(106, 1, Materials.Lafium, Materials.TungstenSteel, new long[]{charge, GT_Values.V[9-2], 9L-2, -1L});
+        setCharge(dStack, charge);
         list.add(dStack);
     }
 }
