@@ -14,7 +14,6 @@ import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_UndergroundOil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -144,30 +143,14 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 		int data = (int) dataSrc;
 		switch (data) {
 			case 2:
-				if (aWorld.getBlock(aX, aY, aZ) == Blocks.bedrock) {
-					if (!aWorld.isRemote) {
-						FluidStack fStack = GT_UndergroundOil.undergroundOil(aWorld.getChunkFromBlockCoords(aX, aZ), -1);
-						addChatMassageByValue(aPlayer, fStack.amount, fStack.getLocalizedName());
-						if (!aPlayer.capabilities.isCreativeMode) {
-							((DetravMetaGeneratedTool01) aItem).doDamage(aStack, this.mCosts);
-						}
-					}
-					return true;
-				} else {
-					if (!aWorld.isRemote) {
-						prospectSingleChunk(aItem, aStack, aPlayer, aWorld, aX, aY, aZ);
-					}
-					return true;
-				}
-			case 3:
 				if (!aWorld.isRemote) {
 					FluidStack fStack = GT_UndergroundOil.undergroundOil(aWorld.getChunkFromBlockCoords(aX, aZ), -1);
 					addChatMassageByValue(aPlayer, fStack.amount, fStack.getLocalizedName());
 					if (!aPlayer.capabilities.isCreativeMode) {
 						((DetravMetaGeneratedTool01) aItem).doDamage(aStack, this.mCosts);
 					}
-					return true;
 				}
+				return true;
 			case 4:
 			case 5:
 			case 6:
