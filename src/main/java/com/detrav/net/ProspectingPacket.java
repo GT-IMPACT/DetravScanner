@@ -7,15 +7,15 @@ import com.google.common.base.Objects;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import com.impact.common.oregeneration.OreGenerator;
-import com.impact.common.oregeneration.OreVein;
-import com.impact.core.Impact_API;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
 import gregtech.api.util.GT_LanguageManager;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import space.gtimpact.virtual_world.api.OreVeinCount;
+import space.gtimpact.virtual_world.api.VirtualAPI;
+import space.gtimpact.virtual_world.api.VirtualOreVein;
 
 import java.util.HashMap;
 
@@ -86,13 +86,14 @@ public class ProspectingPacket extends DetravPacket {
 				name = StatCollector.translateToLocal("gui.detrav.scanner.pollution");
 				rgba = new short[]{125, 123, 118, 0};
 			} else if (packet.ptype > 3) {
-				OreVein ore = Impact_API.registerVeins.get((int) meta);
-				rgba = ore.colorVein;
-				if (rgba == null) {
-					DetravScannerMod.proxy.sendPlayerExeption("Unknown Impact Ore VeinID = " + meta + " Please add Color!");
-					rgba = new short[]{125, 123, 118, 0};
-				}
-				name = Objects.firstNonNull(ore.nameVein, StatCollector.translateToLocal("gui.detrav.scanner.unknown_ore"));
+				VirtualOreVein vein = VirtualAPI.getVirtualOreVeinById(meta);
+				if (vein == null) return;
+
+				name = Objects.firstNonNull(vein.getName(), StatCollector.translateToLocal("gui.detrav.scanner.unknown_ore"));
+
+				packet.ores.put(name, vein.getColor());
+				packet.metaMap.put(meta, name);
+				return;
 			} else {
 				return;
 			}
@@ -102,6 +103,8 @@ public class ProspectingPacket extends DetravPacket {
 		packet.ores.put(name, ((rgba[0] & 0xFF) << 16) + ((rgba[1] & 0xFF) << 8) + ((rgba[2] & 0xFF)));
 		packet.metaMap.put(meta, name);
 	}
+
+
 	
 	public static Object decode(ByteArrayDataInput aData) {
 		ProspectingPacket packet = new ProspectingPacket(aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt(), aData.readInt());

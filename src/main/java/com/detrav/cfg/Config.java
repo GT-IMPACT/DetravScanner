@@ -1,8 +1,8 @@
 package com.detrav.cfg;
 
-import com.impact.common.oregeneration.generator.OresRegionGenerator;
+import space.gtimpact.virtual_world.api.VirtualAPI;
 
 public class Config {
-	public static int oreLayers = OresRegionGenerator.layers;
+	public static int oreLayers = VirtualAPI.LAYERS_VIRTUAL_ORES;
 	public static int modesProspect = 3 + oreLayers;
 }

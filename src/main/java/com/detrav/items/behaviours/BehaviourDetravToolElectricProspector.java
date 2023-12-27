@@ -4,11 +4,6 @@ import com.detrav.cfg.Config;
 import com.detrav.items.DetravMetaGeneratedTool01;
 import com.detrav.net.DetravNetwork;
 import com.detrav.net.ProspectingPacket;
-import com.google.common.base.Objects;
-import com.impact.common.oregeneration.OreGenerator;
-import com.impact.common.oregeneration.OreVein;
-import com.impact.common.oregeneration.generator.OreVeinGenerator;
-import com.impact.common.oregeneration.generator.OresRegionGenerator;
 import gregtech.api.items.GT_MetaBase_Item;
 import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_UndergroundOil;
@@ -16,15 +11,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fluids.FluidStack;
+import space.gtimpact.virtual_world.api.OreVeinCount;
+import space.gtimpact.virtual_world.api.VirtualAPI;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.impact.core.Impact_API.regionsOres;
 
 /**
  * Created by wital_000 on 19.03.2016.
@@ -99,23 +93,14 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 							case 7:
 							case 8:
 								Chunk chunkCurr = aWorld.getChunkFromBlockCoords(c.xPosition * 16 + x, c.zPosition * 16 + z);
-								ChunkCoordIntPair chunkPosition = chunkCurr.getChunkCoordIntPair();
-								int xRegCurrent = (chunkPosition.chunkXPos >> 5) % 512;
-								int zRegCurrent = (chunkPosition.chunkZPos >> 5) % 512;
-								int dimID = aWorld.provider.dimensionId;
-								OresRegionGenerator currentRegion = new OresRegionGenerator(xRegCurrent, zRegCurrent, dimID);
-								int idHash = Objects.hashCode(currentRegion.xRegion, currentRegion.zRegion, dimID);
-								if (!regionsOres.containsKey(idHash)) {
-									currentRegion.createVeins();
-									regionsOres.put(idHash, currentRegion);
-								}
 								int layer = data - 4;
-								OreVeinGenerator oreVein = OreGenerator.getVein(chunkCurr, layer);
-								if (oreVein != null) {
-									int sizeVein = OreGenerator.sizeChunk(chunkCurr, layer) / 1000;
-									packet.addBlock(c.xPosition * 16 + x, 1, c.zPosition * 16 + z, (short) oreVein.oreVeinID);
-									packet.addBlock(c.xPosition * 16 + x, 2, c.zPosition * 16 + z, (short) sizeVein);
+								OreVeinCount ore = VirtualAPI.getOreInfoChunk(chunkCurr, layer);
+
+								if (ore != null) {
+									packet.addBlock(c.xPosition * 16 + x, 1, c.zPosition * 16 + z, (short) ore.getType().getId());
+									packet.addBlock(c.xPosition * 16 + x, 2, c.zPosition * 16 + z, (short) (ore.getSize() / 1000));
 								}
+
 								break;
 						}
 					}
@@ -158,12 +143,12 @@ public class BehaviourDetravToolElectricProspector extends BehaviourDetravToolPr
 			case 8:
 				if (!aWorld.isRemote) {
 					Chunk ch = aWorld.getChunkFromBlockCoords(aX, aZ);
-					int tier = data - 4;
-					OreVeinGenerator oreVein = OreGenerator.getVein(ch, tier);
-					OreVein ore = OreGenerator.getOreVein(ch, tier);
-					if (oreVein != null) {
-						int sizeVein = OreGenerator.sizeChunk(ch, tier);
-						aPlayer.addChatMessage(new ChatComponentText(foundTexts[6] + ": " + ore.nameVein + ", size: " + GT_Utility.formatNumbers(sizeVein)));
+					int layer = data - 4;
+
+					OreVeinCount ore = VirtualAPI.getOreInfoChunk(ch, layer);
+					if (ore != null) {
+						aPlayer.addChatMessage(new ChatComponentText(foundTexts[6] + ": "
+								+ ore.getType().getName() + ", size: " + GT_Utility.formatNumbers(ore.getSize())));
 					}
 					return true;
 				}

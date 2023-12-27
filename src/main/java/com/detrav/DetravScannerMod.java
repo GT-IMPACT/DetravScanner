@@ -6,7 +6,6 @@ import com.detrav.net.DetravNetwork;
 import com.detrav.proxies.CommonProxy;
 import com.detrav.utils.DetravCreativeTab;
 import com.detrav.utils.FluidColors;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -18,7 +17,10 @@ import gregtech.api.GregTech_API;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.config.Configuration;
 
-@Mod(modid = DetravScannerMod.MODID, version = DetravScannerMod.VERSION,dependencies = "required-after:IC2;required-after:gregtech;after:miscutils;after:bartworks")
+import static space.impact.detravscannermod.BuildConfigKt.MODID;
+import static space.impact.detravscannermod.BuildConfigKt.VERSION;
+
+@Mod(modid = MODID, version = VERSION, dependencies = "required-after:IC2;required-after:gregtech;after:miscutils;after:bartworks")
 public class DetravScannerMod
 {
     public static final String MODID = "detravscannermod";
